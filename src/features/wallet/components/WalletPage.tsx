@@ -1,5 +1,3 @@
-// src/features/wallet/components/WalletPage.tsx
-
 import { useState } from 'react';
 import {
   Plus, Wallet, ShoppingCart, Heart, Home, Car, BookOpen,
@@ -12,9 +10,9 @@ import {
 } from '@/components/ui/shadcn/dialog';
 import { Button } from '@/components/ui/shadcn/button';
 
-// ============================================================
+
 // TYPES
-// ============================================================
+
 type MutationType = 'top-up' | 'transfer-in' | 'transfer-out' | 'expense';
 
 type Mutation = {
@@ -38,9 +36,9 @@ type Envelope = {
   mutations: Mutation[];
 };
 
-// ============================================================
+
 // CONSTANTS
-// ============================================================
+
 const ICON_OPTIONS = [
   { label: 'Wallet',     icon: Wallet },
   { label: 'Shopping',   icon: ShoppingCart },
@@ -63,7 +61,7 @@ const COLOR_OPTIONS = [
   '#64748b',
 ];
 
-// ── FR-KNT-05: 3 default Sharia envelopes on onboarding ──
+//  3 default Sharia envelopes on onboarding
 const DEFAULT_ENVELOPES: Envelope[] = [
   {
     id: 1,
@@ -106,9 +104,9 @@ const DEFAULT_ENVELOPES: Envelope[] = [
   },
 ];
 
-// ============================================================
+
 // HELPERS
-// ============================================================
+
 function formatRupiah(value: number) {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -128,9 +126,8 @@ function formatDate(dateStr: string) {
   });
 }
 
-// ============================================================
 // EMPTY FORMS
-// ============================================================
+
 const EMPTY_CREATE_FORM = {
   name: '', icon: 'Wallet', targetBalance: '', description: '', color: '#059669',
 };
@@ -143,9 +140,9 @@ const EMPTY_TRANSFER_FORM = {
   toEnvelopeId: '', amount: '', note: '',
 };
 
-// ============================================================
+
 // MAIN COMPONENT
-// ============================================================
+
 export function WalletPage() {
   // ── State ────────────────────────────────────────────────
   const [envelopes, setEnvelopes] = useState<Envelope[]>(DEFAULT_ENVELOPES);
@@ -173,12 +170,12 @@ export function WalletPage() {
   const [topUpErrors,    setTopUpErrors]    = useState<Partial<typeof EMPTY_TOPUP_FORM>>({});
   const [transferErrors, setTransferErrors] = useState<Partial<typeof EMPTY_TRANSFER_FORM>>({});
 
-  // ── Derived ──────────────────────────────────────────────
+  // ── Derived 
   const totalBalance = envelopes.reduce((sum, e) => sum + e.currentBalance, 0);
   const totalTarget  = envelopes.reduce((sum, e) => sum + e.targetBalance, 0);
   const totalUsagePercent = totalTarget > 0 ? (totalBalance / totalTarget) * 100 : 0;
 
-  // ── FR-KNT-01: Create Envelope ───────────────────────────
+  // Create Envelope 
   function handleOpenCreate() {
     setCreateForm(EMPTY_CREATE_FORM);
     setCreateErrors({});
@@ -214,7 +211,7 @@ export function WalletPage() {
     setIsCreateOpen(false);
   }
 
-  // ── FR-KNT-02: Top Up (Add Funds) ────────────────────────
+  //  Top Up (Add Funds) 
   function handleOpenTopUp(env: Envelope) {
     setActiveEnvelope(env);
     setTopUpForm(EMPTY_TOPUP_FORM);
@@ -253,7 +250,7 @@ export function WalletPage() {
     setIsTopUpOpen(false);
   }
 
-  // ── FR-KNT-03: Transfer Funds Between Envelopes ──────────
+  // Transfer Funds Between Envelopes 
   function handleOpenTransfer(env: Envelope) {
     setActiveEnvelope(env);
     setTransferForm(EMPTY_TRANSFER_FORM);
@@ -312,7 +309,7 @@ export function WalletPage() {
     setIsTransferOpen(false);
   }
 
-  // ── FR-KNT-06: Delete Envelope ───────────────────────────
+  // Delete Envelope 
   function handleOpenDelete(env: Envelope) {
     setActiveEnvelope(env);
     setDeleteTransferTo('');
@@ -352,15 +349,15 @@ export function WalletPage() {
     setActiveEnvelope(null);
   }
 
-  // ── FR-KNT-07: Overview / Detail ─────────────────────────
+  // Overview / Detail 
   function handleOpenDetail(env: Envelope) {
     setActiveEnvelope(env);
     setIsDetailOpen(true);
   }
 
-  // ============================================================
+
   // RENDER
-  // ============================================================
+
   return (
     <div className="space-y-6">
 
@@ -379,7 +376,7 @@ export function WalletPage() {
         </Button>
       </div>
 
-      {/* ── FR-KNT-07: Summary Cards ── */}
+      {/* ── Summary Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gradient-to-br from-[#059669] to-[#10b981] rounded-2xl p-5 text-white shadow-md">
           <p className="text-sm opacity-80 mb-1">Total Balance</p>
@@ -450,21 +447,21 @@ export function WalletPage() {
 
               {/* Actions */}
               <div className="flex gap-2 mt-auto pt-1">
-                {/* FR-KNT-02 */}
+                {/* Top Up (Add Funds) */}
                 <button
                   onClick={() => handleOpenTopUp(env)}
                   className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-xl border border-border hover:bg-emerald-50 hover:border-[#059669] hover:text-[#059669] transition-colors"
                 >
                   <ArrowDownCircle className="w-3.5 h-3.5" /> Add Funds
                 </button>
-                {/* FR-KNT-03 */}
+                {/* Transfer Funds Between Envelopes */}
                 <button
                   onClick={() => handleOpenTransfer(env)}
                   className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-xl border border-border hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 transition-colors"
                 >
                   <ArrowRightLeft className="w-3.5 h-3.5" /> Transfer
                 </button>
-                {/* FR-KNT-07 */}
+                {/* Summary Cards*/}
                 <button
                   onClick={() => handleOpenDetail(env)}
                   className="flex items-center justify-center p-2 rounded-xl border border-border hover:bg-muted transition-colors"
@@ -486,7 +483,7 @@ export function WalletPage() {
         </button>
       </div>
 
-      {/* ── FR-KNT-01: Create Envelope Dialog ── */}
+      {/* ── Create Envelope Dialog ── */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="sm:max-w-md rounded-2xl">
           <DialogHeader>
@@ -567,7 +564,7 @@ export function WalletPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── FR-KNT-02: Top Up Dialog ── */}
+      {/* ── Top Up Dialog ── */}
       <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
         <DialogContent className="sm:max-w-sm rounded-2xl">
           <DialogHeader>
@@ -604,7 +601,7 @@ export function WalletPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── FR-KNT-03: Transfer Dialog ── */}
+      {/* ── Transfer Dialog ── */}
       <Dialog open={isTransferOpen} onOpenChange={setIsTransferOpen}>
         <DialogContent className="sm:max-w-sm rounded-2xl">
           <DialogHeader>
@@ -657,7 +654,7 @@ export function WalletPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── FR-KNT-06: Delete Dialog ── */}
+      {/* ── Delete Dialog ── */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="sm:max-w-sm rounded-2xl">
           <DialogHeader>
@@ -703,7 +700,7 @@ export function WalletPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── FR-KNT-07: Detail / Mutation History Dialog ── */}
+      {/* ── Detail / Mutation History Dialog ── */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="sm:max-w-lg rounded-2xl">
           <DialogHeader>
