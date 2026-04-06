@@ -1,3 +1,4 @@
+import React from 'react';
 import { 
   Wallet, 
   TrendingUp, 
@@ -8,10 +9,14 @@ import {
   DollarSign,
   AlertTriangle,
   CheckCircle2,
-  Bell,
-  Eye,
-  Activity
+  ShoppingCart,
+  Truck,
+  Home,
+  CreditCard,
+  Heart
 } from 'lucide-react';
+import { getRecentTransactions } from '@/utils/storage.util';
+import type { Transaction } from '@/types/transaction.types';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const balanceData = [
@@ -30,12 +35,45 @@ const categorySpending = [
   { category: 'Sedekah', spent: 200, budget: 250, percentage: 80 },
 ];
 
-const recentTransactions = [
-  { id: 1, name: 'Belanja Kebutuhan', category: 'Makanan', amount: -150, date: 'Hari Ini, 10:30 AM', type: 'expense', status: 'Selesai' },
-  { id: 2, name: 'Gaji Bulanan', category: 'Pemasukan', amount: 4500, date: 'Kemarin', type: 'income', status: 'Selesai' },
-  { id: 3, name: 'Pembayaran Zakat', category: 'Sedekah', amount: -200, date: '3 Maret', type: 'expense', status: 'Selesai' },
-  { id: 4, name: 'Tagihan Utilitas', category: 'Tagihan', amount: -120, date: '2 Maret', type: 'expense', status: 'Tertunda' },
-];
+interface CategoryIconProps {
+  category: string;
+  className?: string;
+}
+
+function CategoryIcon({ category, className }: CategoryIconProps) {
+  const icons: Record<string, React.ComponentType<any>> = {
+    'Makanan': ShoppingCart,
+    'Pemasukan': TrendingUp,
+    'Sedekah': Heart,
+    'Tagihan': CreditCard,
+    'Belanja': ShoppingCart,
+    'Transportasi': Truck,
+    'Tempat Tinggal': Home,
+    'Salary': TrendingUp,
+    'Food & Drinks': ShoppingCart,
+    'Transportation': Truck,
+    'Bills': CreditCard,
+    'Shopping': ShoppingCart,
+    'Health': Heart,
+    'Education': TrendingUp,
+    'Zakat/Charity': Heart,
+    'Other': DollarSign
+  };
+  
+  const IconComponent = icons[category] || DollarSign;
+  return <IconComponent className={className} />;
+}
+
+const recentTransactions: Transaction[] = getRecentTransactions(5).map(t => ({
+  ...t,
+  date: new Date(t.date).toLocaleDateString('id-ID', { 
+    weekday: 'short', 
+    day: 'numeric', 
+    month: 'short', 
+    hour: 'numeric', 
+    minute: '2-digit' 
+  })
+}));
 
 const alerts = [
   { id: 1, type: 'warning', title: 'Anggaran Tempat Tinggal Tercapai', message: 'Kamu sudah mencapai 100% anggaran tempat tinggal', category: 'Housing' },
@@ -94,7 +132,7 @@ export function Dashboard() {
             </div>
             <div>
               <p className="text-sm opacity-90 mb-1">Total Saldo</p>
-              <h3 className="text-3xl font-semibold">Rp.10.000</h3>
+              <h3 className="text-3xl font-semibold">Rp 10.000</h3>
             </div>
           </div>
         </div>
@@ -109,7 +147,7 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Pemasukan Bulan Ini</p>
-            <h3 className="text-2xl font-semibold text-foreground">Rp.150.000</h3>
+            <h3 className="text-2xl font-semibold text-foreground">Rp 150.000</h3>
             <p className="text-xs text-muted-foreground mt-2">Dari 3 Sumber</p>
           </div>
         </div>
@@ -124,7 +162,7 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Pengeluaran Bulan Ini</p>
-            <h3 className="text-2xl font-semibold text-foreground">Rp.2.000.000</h3>
+            <h3 className="text-2xl font-semibold text-foreground">Rp 2.000.000</h3>
             <p className="text-xs text-muted-foreground mt-2">63% Dari Pemasukan</p>
           </div>
         </div>
@@ -139,7 +177,7 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Tabungan Bersih</p>
-            <h3 className="text-2xl font-semibold text-foreground"> - Rp.2.150.000</h3>
+            <h3 className="text-2xl font-semibold text-foreground">- Rp 2.150.000</h3>
             <p className="text-xs text-muted-foreground mt-2">Di atas target</p>
           </div>
         </div>
@@ -204,7 +242,7 @@ export function Dashboard() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-foreground">{cat.category}</span>
                   <span className={`text-xs font-semibold ${
-                    cat.percentage >= 100 ? 'text-[#dc2626]' : cat.percentage >= 80 ? 'text-[#d97706]' : 'text-[#047857]'
+                    cat.percentage >= 100 ? 'text-destructive' : cat.percentage >= 80 ? 'text-[#d97706]' : 'text-[#047857]'
                   }`}>
                     {cat.percentage.toFixed(0)}%
                   </span>
@@ -214,17 +252,17 @@ export function Dashboard() {
                     <div 
                       className={`h-2.5 rounded-full transition-all duration-500 ${
                         cat.percentage >= 100 
-                          ? 'bg-gradient-to-r from-[#dc2626] to-[#ef4444]' 
+                          ? 'bg-destructive' 
                           : cat.percentage >= 80 
-                          ? 'bg-gradient-to-r from-[#d97706] to-[#f59e0b]' 
-                          : 'bg-gradient-to-r from-[#047857] to-[#059669]'
+                          ? 'bg-orange-500' 
+                          : 'bg-emerald-500'
                       }`}
                       style={{ width: `${Math.min(cat.percentage, 100)}%` }}
                     ></div>
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  ${cat.spent} of ${cat.budget}
+                  Rp {cat.spent.toLocaleString('id-ID')} of Rp {cat.budget.toLocaleString('id-ID')}
                 </p>
               </div>
             ))}
@@ -254,7 +292,7 @@ export function Dashboard() {
                       ? 'bg-emerald-50 text-[#047857]' 
                       : 'bg-orange-50 text-[#d97706]'
                   }`}>
-                    <DollarSign className="w-5 h-5" />
+                    <CategoryIcon category={transaction.category} className="w-5 h-5" />
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{transaction.name}</p>
@@ -263,16 +301,16 @@ export function Dashboard() {
                 </div>
                 <div className="text-right">
                   <p className={`font-semibold ${
-                    transaction.type === 'income' ? 'text-[#047857]' : 'text-foreground'
+                    transaction.type === 'income' ? 'text-[#047857]' : 'text-destructive'
                   }`}>
-                    {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)}
+                    {transaction.type === 'income' ? '+' : ''}Rp {Math.abs(transaction.amount).toLocaleString('id-ID')}
                   </p>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
                     transaction.status === 'completed' 
                       ? 'bg-emerald-50 text-[#047857]' 
                       : 'bg-orange-50 text-[#d97706]'
                   }`}>
-                    {transaction.status}
+                    {transaction.status === 'completed' ? 'Selesai' : 'Tertunda'}
                   </span>
                 </div>
               </div>
@@ -283,3 +321,4 @@ export function Dashboard() {
     </div>
   );
 }
+
