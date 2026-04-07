@@ -1,61 +1,152 @@
-import { ShoppingCart, Home, GraduationCap, Heart, Utensils, Car, Plus, TrendingUp, AlertCircle, Settings } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, Wallet, Info } from 'lucide-react';
+import { useBudget } from '@/hooks/useBudget';
+import { BudgetList } from './BudgetList';
+import { BudgetForm } from './BudgetForm';
+import { BudgetDeleteDialog } from './BudgetDeleteDialog';
+import { BudgetSedekah } from './BudgetCharity';
 
-const budgetCategories = [
-  { id: 1, name: 'Food & Groceries', icon: Utensils, allocated: 800, spent: 620, color: '#047857', alert: false },
-  { id: 2, name: 'Housing & Utilities', icon: Home, allocated: 1500, spent: 1500, color: '#d97706', alert: true },
-  { id: 3, name: 'Transportation', icon: Car, allocated: 400, spent: 380, color: '#0891b2', alert: true },
-  { id: 4, name: 'Education', icon: GraduationCap, allocated: 300, spent: 150, color: '#7c3aed', alert: false },
-  { id: 5, name: 'Charity & Zakat', icon: Heart, allocated: 250, spent: 200, color: '#065f46', alert: false },
-  { id: 6, name: 'Shopping', icon: ShoppingCart, allocated: 200, spent: 95, color: '#db2777', alert: false },
-];
+// ── Format rupiah display ─────────────────────────────────────
+function formatRupiah(value: number): string {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(value);
+}
 
+// ── Component ─────────────────────────────────────────────────
 export function BudgetPlanning() {
-  const totalAllocated = budgetCategories.reduce((sum, cat) => sum + cat.allocated, 0);
-  const totalSpent = budgetCategories.reduce((sum, cat) => sum + cat.spent, 0);
-  const remaining = totalAllocated - totalSpent;
+  const {
+    // State
+    budgets,
+    form,
+    setForm,
+    formErrors,
+    isFormOpen,
+    setIsFormOpen,
+    isDeleteOpen,
+    setIsDeleteOpen,
+    activeBudget,
+    summary,
+
+    // Handlers
+    handleOpenCreate,
+    handleOpenEdit,
+    handleSubmitForm,
+    handleOpenDelete,
+    handleConfirmDelete,
+    handleToggleCarryOver,
+    handleUpdateCharityTarget,
+
+    // Constants
+    DUMMY_MONTHLY_INCOME,
+    ZAKAT_RATE,
+  } = useBudget();
+
+  // ── Derived lists ────────────────────────────────────────────
+  // Separate sedekah budgets for the dedicated sedekah section
+  const sedekahBudgets = budgets.filter((b) => b.isSedekah);
+
+  // Regular budgets shown in the main list (all budgets including sedekah & zakat)
+  const allBudgets = budgets;
+
+  // Overall spending percentage
+  const overallPercentage = summary.totalAllocated > 0
+    ? (summary.totalSpent / summary.totalAllocated) * 100
+    : 0;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-semibold text-foreground mb-1">Budget Planning</h1>
-        <p className="text-muted-foreground">Manage your halal spending categories and track your monthly budget.</p>
+
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground mb-1">Budget Planning</h1>
+          <p className="text-muted-foreground">
+            Manage your halal spending categories and track your monthly budget.
+          </p>
+        </div>
+        <button
+          onClick={handleOpenCreate}
+          className="flex items-center gap-2 bg-gradient-to-r from-[#059669] to-[#10b981] text-white px-4 py-2.5 rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="text-sm font-medium">Add Budget</span>
+        </button>
       </div>
 
-      {/* Budget Overview */}
+      {/* ── Zakat Info Banner (FR-BDG-05) ── */}
+      <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
+        <Info className="w-5 h-5 text-[#059669] mt-0.5 flex-shrink-0" />
+        <div>
+          <p className="text-sm font-medium text-foreground">Auto Zakat Budget</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Based on your monthly income of{' '}
+            <span className="font-medium text-foreground">{formatRupiah(DUMMY_MONTHLY_INCOME)}</span>,
+            your zakat budget is automatically set to{' '}
+            <span className="font-medium text-[#059669]">
+              {formatRupiah(DUMMY_MONTHLY_INCOME * ZAKAT_RATE)}
+            </span>{' '}
+            ({(ZAKAT_RATE * 100).toFixed(1)}% of income).
+          </p>
+        </div>
+      </div>
+
+      {/* ── Summary Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {/* Total Budget */}
         <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
           <div className="flex items-start justify-between mb-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#059669] to-[#10b981] flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+              <Wallet className="w-6 h-6 text-white" />
             </div>
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Total Budget</p>
-            <h3 className="text-2xl font-semibold text-foreground">${totalAllocated.toFixed(2)}</h3>
+            <h3 className="text-2xl font-semibold text-foreground">
+              {formatRupiah(summary.totalAllocated)}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Across {budgets.length} categories
+            </p>
           </div>
         </div>
 
+        {/* Total Spent */}
         <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
           <div className="flex items-start justify-between mb-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f59e0b] to-[#fbbf24] flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+              <TrendingDown className="w-6 h-6 text-white" />
             </div>
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Total Spent</p>
-            <h3 className="text-2xl font-semibold text-foreground">${totalSpent.toFixed(2)}</h3>
+            <h3 className="text-2xl font-semibold text-foreground">
+              {formatRupiah(summary.totalSpent)}
+            </h3>
+            {/* Overall progress bar */}
             <div className="mt-2">
               <div className="w-full bg-muted rounded-full h-2">
-                <div 
-                  className="bg-[#f59e0b] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(totalSpent / totalAllocated) * 100}%` }}
-                ></div>
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    overallPercentage >= 100
+                      ? 'bg-red-500'
+                      : overallPercentage >= 80
+                      ? 'bg-[#f59e0b]'
+                      : 'bg-[#059669]'
+                  }`}
+                  style={{ width: `${Math.min(overallPercentage, 100)}%` }}
+                />
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {overallPercentage.toFixed(1)}% of total budget used
+              </p>
             </div>
           </div>
         </div>
 
+        {/* Remaining */}
         <div className="bg-gradient-to-br from-[#059669] to-[#10b981] rounded-2xl p-6 shadow-lg text-white">
           <div className="flex items-start justify-between mb-4">
             <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
@@ -64,95 +155,90 @@ export function BudgetPlanning() {
           </div>
           <div>
             <p className="text-sm opacity-90 mb-1">Remaining Budget</p>
-            <h3 className="text-2xl font-semibold">${remaining.toFixed(2)}</h3>
-            <p className="text-xs opacity-75 mt-2">{((remaining / totalAllocated) * 100).toFixed(1)}% available</p>
+            <h3 className="text-2xl font-semibold">
+              {formatRupiah(summary.totalRemaining)}
+            </h3>
+            <p className="text-xs opacity-75 mt-1">
+              {(100 - overallPercentage).toFixed(1)}% available
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Budget Categories */}
+      {/* ── Sedekah Section  ── */}
+      {sedekahBudgets.length > 0 && (
+        <BudgetSedekah
+          sedekahBudgets={sedekahBudgets}
+          onUpdateTarget={handleUpdateCharityTarget}
+        />
+      )}
+
+      {/* ── Budget List (FR-BDG-04) ── */}
       <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="font-semibold text-foreground mb-1">Budget Categories</h3>
-            <p className="text-sm text-muted-foreground">Track spending across halal categories</p>
+            <p className="text-sm text-muted-foreground">
+              Track spending across all halal categories
+            </p>
           </div>
-          <button className="flex items-center gap-2 bg-[#059669] text-white px-4 py-2 rounded-xl hover:bg-[#047857] transition-colors duration-200">
+          <button
+            onClick={handleOpenCreate}
+            className="flex items-center gap-2 text-sm text-[#059669] hover:text-[#047857] font-medium"
+          >
             <Plus className="w-4 h-4" />
-            <span className="text-sm font-medium">Add Category</span>
+            Add Category
           </button>
         </div>
 
-        <div className="space-y-4">
-          {budgetCategories.map((category) => {
-            const IconComponent = category.icon;
-            const percentage = (category.spent / category.allocated) * 100;
-            const isOverBudget = percentage > 100;
-            
-            return (
-              <div key={category.id} className="p-4 rounded-xl border border-border hover:shadow-md transition-all duration-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: `${category.color}20`, color: category.color }}
-                    >
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-foreground">{category.name}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        ${category.spent.toFixed(2)} of ${category.allocated.toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-sm font-medium ${isOverBudget ? 'text-destructive' : 'text-muted-foreground'}`}>
-                      {percentage.toFixed(0)}%
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      ${(category.allocated - category.spent).toFixed(2)} left
-                    </p>
-                  </div>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2.5">
-                  <div 
-                    className="h-2.5 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${Math.min(percentage, 100)}%`,
-                      backgroundColor: isOverBudget ? '#dc2626' : category.color
-                    }}
-                  ></div>
-                </div>
-                {category.alert && (
-                  <div className="mt-2 flex items-center gap-2 text-sm text-red-500">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Alert: Over budget</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <BudgetList
+          budgets={allBudgets}
+          onEdit={handleOpenEdit}
+          onDelete={handleOpenDelete}
+          onToggleCarryOver={handleToggleCarryOver}
+        />
       </div>
 
-      {/* Budget Tips */}
+      {/* ── Halal Tips ── */}
       <div className="bg-gradient-to-br from-[#f0fdf4] to-[#d1fae5] rounded-2xl p-6 border border-[#059669]/20">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center">
-            <Heart className="w-6 h-6 text-[#059669]" />
+          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0">
+            <span className="text-xl">💡</span>
           </div>
           <div className="flex-1">
-            <h4 className="font-semibold text-foreground mb-1">Halal Budget Planning Tips</h4>
-            <ul className="text-sm text-muted-foreground space-y-1">
+            <h4 className="font-semibold text-foreground mb-2">Halal Budget Planning Tips</h4>
+            <ul className="text-sm text-muted-foreground space-y-1.5">
               <li>• Allocate 2.5% of savings for Zakat annually</li>
               <li>• Set aside funds for regular Sadaqah to help those in need</li>
               <li>• Prioritize essential needs (food, shelter, education) before wants</li>
               <li>• Avoid interest-based transactions and maintain ethical spending</li>
+              <li>• Use carry over to reward yourself for under-spending in a category</li>
             </ul>
           </div>
         </div>
       </div>
+
+      {/* ── Dialogs ── */}
+
+      {/* Create / Edit form (FR-BDG-01, FR-BDG-02) */}
+      <BudgetForm
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        form={form}
+        setForm={setForm}
+        formErrors={formErrors}
+        activeBudget={activeBudget}
+        onSubmit={handleSubmitForm}
+      />
+
+      {/* Delete confirmation (FR-BDG-03) */}
+      <BudgetDeleteDialog
+        isOpen={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        activeBudget={activeBudget}
+        onConfirm={handleConfirmDelete}
+      />
+
     </div>
   );
 }
