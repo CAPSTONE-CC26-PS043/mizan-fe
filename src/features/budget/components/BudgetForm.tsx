@@ -167,7 +167,7 @@ export function BudgetForm({
             >
               <span
                 className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${
-                  form.carryOver ? 'translate-x-6' : 'translate-x-1'
+                  form.carryOver ? 'translate-x-1' : 'right-7'
                 }`}
               />
             </button>
@@ -188,7 +188,7 @@ export function BudgetForm({
             >
               <span
                 className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${
-                  form.isSedekah ? 'translate-x-6' : 'translate-x-1'
+                  form.isSedekah ? 'translate-x-1' : 'right-7'
                 }`}
               />
             </button>
