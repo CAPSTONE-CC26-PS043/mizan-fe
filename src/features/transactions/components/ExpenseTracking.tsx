@@ -1,10 +1,12 @@
 //  IMPORTS 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Filter, Search, Download, Plus, TrendingUp, TrendingDown, Trash2, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TransactionForm } from '@/TransactionForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/shadcn/dialog';
 import { Button } from '@/components/ui/shadcn/button';
+import type { Transaction } from '@/types/transaction.types';
+import { getTransactions, deleteTransaction } from '@/utils/storage.util';
 
 //  DATA 
 const weeklyExpenses = [
@@ -43,11 +45,16 @@ const allCategories = ['Food', 'Housing', 'Transport', 'Education', 'Charity', '
 export function ExpenseTracking() {
   //  STATE 
   const [isOpen, setIsOpen] = useState(false);
-  const [expenses, setExpenses] = useState(initialExpenses);
+  const [expenses, setExpenses] = useState<Transaction[]>([]);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showFilter, setShowFilter] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const transactions = getTransactions();
+    setExpenses(transactions);
+  }, []);
 
   //  DERIVED DATA 
   const filtered = expenses.filter((e) => {
@@ -66,6 +73,7 @@ export function ExpenseTracking() {
   //  HANDLERS 
   const handleDelete = () => {
     if (deleteId === null) return;
+    deleteTransaction(deleteId);
     setExpenses((prev) => prev.filter((e) => e.id !== deleteId));
     setDeleteId(null);
   };
@@ -252,9 +260,9 @@ export function ExpenseTracking() {
                     <td className="py-4 px-4 text-sm text-muted-foreground">
                       {new Date(expense.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
-                    <td className="py-4 px-4 text-right font-semibold text-foreground">
-                      ${expense.amount.toFixed(2)}
-                    </td>
+                      <td className="py-4 px-4 text-right font-semibold text-foreground">
+                        Rp {Math.abs(expense.amount).toLocaleString('id-ID')}
+                      </td>
                     <td className="py-4 px-4 text-right">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs bg-[#f0fdf4] text-[#059669]">
                         {expense.status}
@@ -281,7 +289,7 @@ export function ExpenseTracking() {
           <DialogHeader>
             <DialogTitle>Delete Transaction?</DialogTitle>
             <DialogDescription>
-              {txToDelete && <>Transaction <strong>"{txToDelete.name}"</strong> of <strong>${txToDelete.amount.toFixed(2)}</strong> will be permanently deleted.</>}
+              {txToDelete && <>Transaksi <strong>"{txToDelete.name}"</strong> senilai <strong>Rp {Math.abs(txToDelete.amount).toLocaleString('id-ID')}</strong> akan dihapus permanen.</>}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">

@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/shadcn/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/shadcn/select";
+import type { Transaction } from '@/types/transaction.types';
+import { addTransaction } from '@/utils/storage.util';
 
 type TransactionType = "income" | "expense";
 
@@ -58,11 +60,20 @@ export function TransactionForm({ isOpen, onOpenChange }: Props) {
 
   const handleSubmit = () => {
     if (!form.name || !form.amount || !form.category || !form.date) return;
-    console.log("New transaction:", {
-      ...form,
-      amount: parseInt(form.amount.replace(/\./g, "")),
-      id: Date.now(),
-    });
+    
+    const amountNum = parseInt(form.amount.replace(/\./g, ""));
+    const newTx: Omit<Transaction, 'id'> = {
+      name: form.name,
+      amount: form.type === 'income' ? amountNum : -amountNum,
+      category: form.category,
+      date: form.date,
+      type: form.type,
+      status: 'completed' as const,
+      description: form.description || undefined
+    };
+    
+    addTransaction(newTx);
+    
     setSuccessType(form.type);
     setForm({ name: "", amount: "", category: "", type: "income", date: new Date().toISOString().split("T")[0], description: "" });
     onOpenChange(false);
