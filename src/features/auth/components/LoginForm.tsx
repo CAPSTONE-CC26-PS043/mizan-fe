@@ -47,7 +47,7 @@ export function LoginForm() {
             </label>
             <Link to="/forgot-password" className="text-sm text-[#047857] hover:underline font-medium">Lupa password?</Link>
           </div>
-          <button onClick={() => navigate('/app')}
+          <button onClick={() => navigate('/')}
             className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-4 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm">
             Masuk
           </button>
@@ -174,7 +174,7 @@ export function LoginForm() {
               <Link to="/forgot-password" className="text-sm text-[#047857] hover:underline">Lupa password?</Link>
             </div>
 
-            <button onClick={() => navigate('/app')}
+            <button onClick={() => navigate('/')}
               className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all">
               Masuk
             </button>

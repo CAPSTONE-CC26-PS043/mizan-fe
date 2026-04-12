@@ -14,22 +14,22 @@ export default function AppLayout() {
 
   // 5 item untuk bottom nav mobile (yang paling penting)
   const bottomNavItems = [
-    { to: '/app',              icon: LayoutDashboard, label: 'Dashboard'  },
-    { to: '/app/budget',       icon: Wallet,          label: 'Budget'     },
-    { to: '/app/transactions', icon: TrendingUp,      label: 'Transaksi'  },
-    { to: '/app/zakat',        icon: Heart,           label: 'Zakat'      },
-    { to: '/app/settings',     icon: Settings,        label: 'Pengaturan' },
+    { to: '/',              icon: LayoutDashboard, label: 'Dashboard'  },
+    { to: '/budget',       icon: Wallet,          label: 'Budget'     },
+    { to: '/transactions', icon: TrendingUp,      label: 'Transaksi'  },
+    { to: '/zakat',        icon: Heart,           label: 'Zakat'      },
+    { to: '/settings',     icon: Settings,        label: 'Pengaturan' },
   ];
 
   // Semua item untuk sidebar desktop
   const sidebarNavItems = [
-    { to: '/app',              icon: LayoutDashboard, label: 'Dashboard'        },
-    { to: '/app/zakat',        icon: Heart,           label: 'Zakat & Charity'  },
-    { to: '/app/budget',       icon: Wallet,          label: 'Budget Planning'  },
-    { to: '/app/transactions', icon: TrendingUp,      label: 'Expense Tracking' },
-    { to: '/app/insights',     icon: BookOpen,        label: 'Edukasi Islam'    },
-    { to: '/app/wallets',      icon: Wallet,          label: 'Kantong Dana'     },
-    { to: '/app/settings',     icon: Settings,        label: 'Pengaturan'       },
+    { to: '/',             icon: LayoutDashboard, label: 'Dashboard'        },
+    { to: '/zakat',        icon: Heart,           label: 'Zakat & Charity'  },
+    { to: '/budget',       icon: Wallet,          label: 'Budget Planning'  },
+    { to: '/transactions', icon: TrendingUp,      label: 'Expense Tracking' },
+    { to: '/insights',     icon: BookOpen,        label: 'Edukasi Islam'    },
+    { to: '/wallets',      icon: Wallet,          label: 'Kantong Dana'     },
+    { to: '/settings',     icon: Settings,        label: 'Pengaturan'       },
   ];
 
   const handleLogoutClick = () => {
@@ -68,7 +68,7 @@ export default function AppLayout() {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/app'}
+              end={item.to === '/'}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${
                   isActive
@@ -118,14 +118,14 @@ export default function AppLayout() {
           {dropdownOpen && (
             <div className="absolute bottom-full left-4 right-4 mb-1 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50">
               <button
-                onClick={() => { setDropdownOpen(false); navigate('/app/settings'); }}
+                onClick={() => { setDropdownOpen(false); navigate('/settings'); }}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
               >
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-foreground">Profil Saya</span>
               </button>
               <button
-                onClick={() => { setDropdownOpen(false); navigate('/app/settings'); }}
+                onClick={() => { setDropdownOpen(false); navigate('/settings'); }}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
               >
                 <Settings className="w-4 h-4 text-muted-foreground" />
@@ -193,7 +193,7 @@ export default function AppLayout() {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  end={item.to === '/app'}
+                  end={item.to === '/'}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
@@ -278,7 +278,7 @@ export default function AppLayout() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === '/app'}
+                end={item.to === '/'}
                 className={({ isActive }) =>
                   `flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all duration-200 min-w-[56px] ${
                     isActive ? 'text-[#065f46]' : 'text-muted-foreground'

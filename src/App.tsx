@@ -15,7 +15,7 @@ import { ResetPasswordForm } from './features/auth/components/ResetPasswordForm'
 import { VerifyEmailPage } from './features/auth/components/VerifyEmailConfirmPage';
 
 const router = createBrowserRouter([
-  { path: '/', element: <Navigate to="/app" replace /> },
+  { path: '/', element: <Navigate to="/" replace /> },
   {
     path: '/',
     Component: AuthLayout,
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/app',
+    path: '/',
     Component: AppLayout,
     children: [
       { index: true,               Component: DashboardPage    },
