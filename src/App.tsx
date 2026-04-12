@@ -7,8 +7,6 @@ import TransactionsPage from './pages/TransactionsPage';
 import WalletPage from './pages/WalletPage';
 import BudgetPage from './pages/BudgetPage';
 import ZakatPage from './pages/ZakatPage';
-import InsightsPage from './pages/InsightsPage';
-import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { ForgotPasswordForm } from './features/auth/components/ForgotPasswordForm';
@@ -62,10 +60,8 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: 'transactions', element: <TransactionsPage /> },
       { path: 'wallets', element: <WalletPage /> },
-      { path: 'budget', element: <BudgetPage /> },
+      { path: 'budgets', element: <BudgetPage /> },
       { path: 'zakat', element: <ZakatPage /> },
-      { path: 'insights', element: <InsightsPage /> },
-      { path: 'settings', element: <SettingsPage /> },
     ],
   },
 ]);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router';
 import {
   LayoutDashboard, Heart, Wallet,
-  TrendingUp, BookOpen, Sparkles, Shield, Settings,
+  TrendingUp, Shield,
   LogOut, User, ChevronUp, Bell, Menu, X
 } from 'lucide-react';
 import { useAuth } from '../features/auth/hooks/useAuth';
@@ -29,24 +29,22 @@ export default function AppLayout() {
     return user?.name || user?.email || 'User';
   };
 
-  // 5 item untuk bottom nav mobile (yang paling penting)
+  // Bottom nav mobile
   const bottomNavItems = [
     { to: '/',              icon: LayoutDashboard, label: 'Dashboard'  },
-    { to: '/budget',       icon: Wallet,          label: 'Budget'     },
-    { to: '/transactions', icon: TrendingUp,      label: 'Transaksi'  },
+    { to: '/transactions', icon: TrendingUp,      label: 'Transaction'  },
+    { to: '/wallets',      icon: Wallet,          label: 'Wallet'     },
+    { to: '/budgets',      icon: Wallet,          label: 'Budget'     },
     { to: '/zakat',        icon: Heart,           label: 'Zakat'      },
-    { to: '/settings',     icon: Settings,        label: 'Pengaturan' },
   ];
 
-  // Semua item untuk sidebar desktop
+  // Sidebar navigation items
   const sidebarNavItems = [
     { to: '/',             icon: LayoutDashboard, label: 'Dashboard'        },
+    { to: '/transactions', icon: TrendingUp,      label: 'Transaction Tracking' },
+    { to: '/wallets',      icon: Wallet,          label: 'Wallet'     },
+    { to: '/budgets',      icon: Wallet,          label: 'Budget Planning'  },
     { to: '/zakat',        icon: Heart,           label: 'Zakat & Charity'  },
-    { to: '/budget',       icon: Wallet,          label: 'Budget Planning'  },
-    { to: '/transactions', icon: TrendingUp,      label: 'Expense Tracking' },
-    { to: '/insights',     icon: BookOpen,        label: 'Edukasi Islam'    },
-    { to: '/wallets',      icon: Wallet,          label: 'Kantong Dana'     },
-    { to: '/settings',     icon: Settings,        label: 'Pengaturan'       },
   ];
 
   const handleLogoutClick = () => {
@@ -100,22 +98,6 @@ export default function AppLayout() {
           ))}
         </nav>
 
-        {/* Upgrade card */}
-        <div className="px-4 pb-2">
-          <div className="bg-gradient-to-br from-[#fef3c7] via-[#fde68a] to-[#fcd34d] rounded-2xl p-4">
-            <div className="flex items-start gap-3 mb-3">
-              <Sparkles className="w-5 h-5 text-[#d97706] mt-0.5" fill="#d97706" />
-              <div>
-                <p className="text-sm font-semibold text-foreground">Upgrade to Pro</p>
-                <p className="text-xs text-muted-foreground mt-1">Advanced analytics & insights</p>
-              </div>
-            </div>
-            <button className="w-full bg-[#065f46] text-white py-2 rounded-lg text-sm font-medium hover:bg-[#064e3b] transition-colors">
-              Upgrade Now
-            </button>
-          </div>
-        </div>
-
         {/* User profile + dropdown */}
         <div className="p-4 border-t border-border relative">
           <button
@@ -135,18 +117,11 @@ export default function AppLayout() {
           {dropdownOpen && (
             <div className="absolute bottom-full left-4 right-4 mb-1 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50">
               <button
-                onClick={() => { setDropdownOpen(false); navigate('/settings'); }}
+                onClick={() => { setDropdownOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
               >
                 <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Profil Saya</span>
-              </button>
-              <button
-                onClick={() => { setDropdownOpen(false); navigate('/settings'); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left"
-              >
-                <Settings className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Pengaturan</span>
+                <span className="text-sm text-foreground">My Profile</span>
               </button>
               <div className="h-px bg-border mx-3"></div>
               <button
@@ -225,22 +200,6 @@ export default function AppLayout() {
                 </NavLink>
               ))}
             </nav>
-
-            {/* Upgrade card drawer */}
-            <div className="px-4 pb-3">
-              <div className="bg-gradient-to-br from-[#fef3c7] via-[#fde68a] to-[#fcd34d] rounded-2xl p-4">
-                <div className="flex items-start gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-[#d97706] mt-0.5" fill="#d97706" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Upgrade to Pro</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Analytics & insights lengkap</p>
-                  </div>
-                </div>
-                <button className="w-full bg-[#065f46] text-white py-2 rounded-lg text-xs font-medium hover:bg-[#064e3b] transition-colors">
-                  Upgrade Sekarang
-                </button>
-              </div>
-            </div>
 
             {/* Logout di drawer */}
             <div className="p-4 border-t border-border">

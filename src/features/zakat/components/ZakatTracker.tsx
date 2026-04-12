@@ -1,20 +1,17 @@
 import { Heart, TrendingUp, Calendar, DollarSign, Sparkles } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-const zakatData = [
-  { name: 'Zakat (Obligatory)', value: 850, color: '#065f46' },
-  { name: 'Sadaqah (Voluntary)', value: 320, color: '#047857' },
-  { name: 'Infaq (Spending)', value: 180, color: '#059669' },
-];
-
-const charityHistory = [
-  { id: 1, type: 'Zakat', amount: 200, date: 'Mar 1, 2026', recipient: 'Local Mosque' },
-  { id: 2, type: 'Sadaqah', amount: 50, date: 'Feb 28, 2026', recipient: 'Orphanage Fund' },
-  { id: 3, type: 'Infaq', amount: 75, date: 'Feb 25, 2026', recipient: 'Education Support' },
-  { id: 4, type: 'Zakat', amount: 150, date: 'Feb 20, 2026', recipient: 'Relief Organization' },
-];
+function formatRupiah(n: number) {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+}
 
 export function ZakatTracker() {
+  const zakatData = [
+    { name: 'Zakat (Obligatory)', value: 0, color: '#065f46' },
+    { name: 'Sadaqah (Voluntary)', value: 0, color: '#047857' },
+    { name: 'Infaq (Spending)', value: 0, color: '#059669' },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -35,7 +32,7 @@ export function ZakatTracker() {
           </div>
           <div>
             <p className="text-sm opacity-90 mb-1">Zakat Paid (This Year)</p>
-            <h3 className="text-3xl font-semibold">$850.00</h3>
+            <h3 className="text-3xl font-semibold">{formatRupiah(0)}</h3>
             <p className="text-xs opacity-75 mt-2">2.5% of eligible wealth</p>
           </div>
         </div>
@@ -50,7 +47,7 @@ export function ZakatTracker() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Sadaqah Given</p>
-            <h3 className="text-2xl font-semibold text-foreground">$320.00</h3>
+            <h3 className="text-2xl font-semibold text-foreground">{formatRupiah(0)}</h3>
           </div>
         </div>
 
@@ -64,7 +61,7 @@ export function ZakatTracker() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Infaq Contributions</p>
-            <h3 className="text-2xl font-semibold text-foreground">$180.00</h3>
+            <h3 className="text-2xl font-semibold text-foreground">{formatRupiah(0)}</h3>
           </div>
         </div>
       </div>
@@ -76,32 +73,12 @@ export function ZakatTracker() {
             <h3 className="font-semibold text-foreground mb-1">Charity Distribution</h3>
             <p className="text-sm text-muted-foreground">Breakdown of your charitable giving</p>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={zakatData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              >
-                {zakatData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#ffffff', 
-                  border: '1px solid #e5e7eb', 
-                  borderRadius: '12px',
-                  padding: '8px 12px'
-                }} 
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+            <div className="text-center">
+              <Heart className="w-12 h-12 mx-auto mb-2 opacity-30" />
+              <p className="text-sm">No charity data yet</p>
+            </div>
+          </div>
         </div>
 
         {/* Zakat Calculator */}
@@ -117,8 +94,8 @@ export function ZakatTracker() {
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input 
                   type="number" 
-                  placeholder="34,000.00"
-                  className="w-full pl-10 pr-4 py-3 bg-input-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669]"
+                  placeholder="0"
+                  className="w-full pl-10 pr-4 py-3 bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669]"
                 />
               </div>
             </div>
@@ -127,7 +104,7 @@ export function ZakatTracker() {
                 <span className="text-sm text-muted-foreground">Zakat Due (2.5%)</span>
                 <Heart className="w-4 h-4 text-[#059669]" />
               </div>
-              <p className="text-2xl font-semibold text-[#059669]">$850.00</p>
+              <p className="text-2xl font-semibold text-[#059669]">{formatRupiah(0)}</p>
             </div>
             <button className="w-full bg-gradient-to-r from-[#059669] to-[#10b981] text-white py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200">
               <span className="text-sm font-medium">Record Zakat Payment</span>
@@ -143,37 +120,11 @@ export function ZakatTracker() {
             <h3 className="font-semibold text-foreground mb-1">Charity History</h3>
             <p className="text-sm text-muted-foreground">Your recent charitable contributions</p>
           </div>
-          <button className="text-sm text-[#059669] hover:text-[#047857] font-medium">
-            Export Report
-          </button>
         </div>
-        <div className="space-y-3">
-          {charityHistory.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-4 rounded-xl hover:bg-muted/50 transition-colors duration-200">
-              <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                  item.type === 'Zakat' 
-                    ? 'bg-[#059669] text-white' 
-                    : item.type === 'Sadaqah'
-                    ? 'bg-[#10b981] text-white'
-                    : 'bg-[#34d399] text-white'
-                }`}>
-                  <Heart className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium text-foreground">{item.type}</p>
-                    <span className="text-xs text-muted-foreground">•</span>
-                    <span className="text-sm text-muted-foreground">{item.recipient}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{item.date}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-foreground">${item.amount.toFixed(2)}</p>
-              </div>
-            </div>
-          ))}
+        <div className="text-center py-12 text-muted-foreground">
+          <Heart className="w-12 h-12 mx-auto mb-3 opacity-30" />
+          <p className="text-sm">No charity records yet</p>
+          <p className="text-xs mt-1">Start tracking your charitable giving</p>
         </div>
       </div>
 
@@ -186,12 +137,12 @@ export function ZakatTracker() {
           <div className="flex-1">
             <h4 className="font-semibold text-foreground mb-1">Nisab Threshold Information</h4>
             <p className="text-sm text-muted-foreground mb-3">
-              The current Nisab threshold is approximately $4,780 (based on 85g of gold). 
+              The current Nisab threshold is approximately Rp 85,000,000 (based on 85g of gold). 
               Zakat is obligatory on wealth that has been held for one lunar year and exceeds this threshold.
             </p>
-            <button className="text-sm text-[#059669] hover:text-[#047857] font-medium">
-              Learn more about Zakat →
-            </button>
+            <p className="text-xs text-muted-foreground">
+              Zakat rate: 2.5% of eligible wealth per year
+            </p>
           </div>
         </div>
       </div>
