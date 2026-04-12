@@ -23,4 +23,5 @@ export const apiEndpoints = {
   transactions: '/transactions',
   wallets: '/wallets',
   budgets: '/budgets',
+  dashboard: '/dashboard',
 };
