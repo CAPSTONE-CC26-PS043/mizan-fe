@@ -1,9 +1,8 @@
-import { Plus, TrendingUp, TrendingDown, Wallet, Info } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import { useBudget } from '@/hooks/useBudget';
 import { BudgetList } from './BudgetList';
 import { BudgetForm } from './BudgetForm';
 import { BudgetDeleteDialog } from './BudgetDeleteDialog';
-import { BudgetSedekah } from './BudgetCharity';
 
 // ── Format rupiah display ─────────────────────────────────────
 function formatRupiah(value: number): string {
@@ -17,11 +16,11 @@ function formatRupiah(value: number): string {
 // ── Component ─────────────────────────────────────────────────
 export function BudgetPlanning() {
   const {
-    // State
     budgets,
     form,
     setForm,
     formErrors,
+    apiError,
     isFormOpen,
     setIsFormOpen,
     isDeleteOpen,
@@ -29,7 +28,6 @@ export function BudgetPlanning() {
     activeBudget,
     summary,
 
-    // Handlers
     handleOpenCreate,
     handleOpenEdit,
     handleSubmitForm,
@@ -37,17 +35,10 @@ export function BudgetPlanning() {
     handleConfirmDelete,
     handleToggleCarryOver,
     handleUpdateCharityTarget,
-
-    // Constants
-    DUMMY_MONTHLY_INCOME,
-    ZAKAT_RATE,
   } = useBudget();
 
   // ── Derived lists ────────────────────────────────────────────
-  // Separate sedekah budgets for the dedicated sedekah section
-  const sedekahBudgets = budgets.filter((b) => b.isSedekah);
-
-  // Regular budgets shown in the main list (all budgets including sedekah & zakat)
+  // All budgets
   const allBudgets = budgets;
 
   // Overall spending percentage
@@ -76,7 +67,7 @@ export function BudgetPlanning() {
       </div>
 
       {/* ── Zakat Info Banner (FR-BDG-05) ── */}
-      <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
+      {/* <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
         <Info className="w-5 h-5 text-[#059669] mt-0.5 flex-shrink-0" />
         <div>
           <p className="text-sm font-medium text-foreground">Auto Zakat Budget</p>
@@ -90,7 +81,7 @@ export function BudgetPlanning() {
             ({(ZAKAT_RATE * 100).toFixed(1)}% of income).
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Summary Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -166,29 +157,29 @@ export function BudgetPlanning() {
       </div>
 
       {/* ── Sedekah Section  ── */}
-      {sedekahBudgets.length > 0 && (
+      {/* {sedekahBudgets.length > 0 && (
         <BudgetSedekah
           sedekahBudgets={sedekahBudgets}
           onUpdateTarget={handleUpdateCharityTarget}
         />
-      )}
+      )} */}
 
       {/* ── Budget List (FR-BDG-04) ── */}
       <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="font-semibold text-foreground mb-1">Budget Categories</h3>
+            <h3 className="font-semibold text-foreground mb-1">Budget Plannings</h3>
             <p className="text-sm text-muted-foreground">
-              Track spending across all halal categories
+              See your budget progress.
             </p>
           </div>
-          <button
+          {/* <button
             onClick={handleOpenCreate}
             className="flex items-center gap-2 text-sm text-[#059669] hover:text-[#047857] font-medium"
           >
             <Plus className="w-4 h-4" />
             Add Category
-          </button>
+          </button> */}
         </div>
 
         <BudgetList
@@ -197,25 +188,6 @@ export function BudgetPlanning() {
           onDelete={handleOpenDelete}
           onToggleCarryOver={handleToggleCarryOver}
         />
-      </div>
-
-      {/* ── Halal Tips ── */}
-      <div className="bg-gradient-to-br from-[#f0fdf4] to-[#d1fae5] rounded-2xl p-6 border border-[#059669]/20">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center flex-shrink-0">
-            <span className="text-xl">💡</span>
-          </div>
-          <div className="flex-1">
-            <h4 className="font-semibold text-foreground mb-2">Halal Budget Planning Tips</h4>
-            <ul className="text-sm text-muted-foreground space-y-1.5">
-              <li>• Allocate 2.5% of savings for Zakat annually</li>
-              <li>• Set aside funds for regular Sadaqah to help those in need</li>
-              <li>• Prioritize essential needs (food, shelter, education) before wants</li>
-              <li>• Avoid interest-based transactions and maintain ethical spending</li>
-              <li>• Use carry over to reward yourself for under-spending in a category</li>
-            </ul>
-          </div>
-        </div>
       </div>
 
       {/* ── Dialogs ── */}
@@ -227,6 +199,7 @@ export function BudgetPlanning() {
         form={form}
         setForm={setForm}
         formErrors={formErrors}
+        apiError={apiError}
         activeBudget={activeBudget}
         onSubmit={handleSubmitForm}
       />

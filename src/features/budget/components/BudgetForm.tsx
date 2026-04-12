@@ -37,6 +37,7 @@ interface BudgetFormProps {
   form: BudgetFormState;
   setForm: (form: BudgetFormState) => void;
   formErrors: Partial<BudgetFormState>;
+  apiError: string | null;
   activeBudget: Budget | null; 
   onSubmit: () => void;
 }
@@ -53,6 +54,7 @@ export function BudgetForm({
   form,
   setForm,
   formErrors,
+  apiError,
   activeBudget,
   onSubmit,
 }: BudgetFormProps) {
@@ -193,6 +195,13 @@ export function BudgetForm({
               />
             </button>
           </div>
+
+          {/* API Error Message */}
+          {apiError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+              <p className="text-sm text-red-600">{apiError}</p>
+            </div>
+          )}
 
         </div>
 
