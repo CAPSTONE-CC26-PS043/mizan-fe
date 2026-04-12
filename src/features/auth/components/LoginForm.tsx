@@ -1,10 +1,45 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { Link } from 'react-router';
 import { Shield, Eye, EyeOff, TrendingUp, PiggyBank, Heart } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { toast } from 'sonner';
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const { login, isLoggingIn } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    if (!email || !password) {
+      setError('Email dan password harus diisi');
+      return;
+    }
+
+    try {
+      const response = await login({ email, password });
+      if (!response.success) {
+        setError(response.message || 'Login gagal. Periksa kembali email dan password Anda.');
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      setError(err.message || 'Login gagal. Periksa kembali email dan password Anda.');
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setError(null);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setError(null);
+  };
 
   return (
     <>
@@ -23,22 +58,37 @@ export function LoginForm() {
         <h2 className="text-2xl font-semibold text-foreground mb-1 text-center">Selamat Datang</h2>
         <p className="text-sm text-muted-foreground mb-4 text-center">Masuk ke akun Anda</p>
 
-        <div className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Email</label>
-            <input type="email" placeholder="nama@email.com"
-              className="w-full px-4 py-3.5 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+            <input 
+              type="email" 
+              placeholder="nama@email.com"
+              value={email}
+              onChange={handleEmailChange}
+              disabled={isLoggingIn}
+              className="w-full px-4 py-3.5 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50" 
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Password</label>
             <div className="relative">
-              <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
-                className="w-full px-4 py-3.5 pr-12 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                placeholder="••••••••"
+                value={password}
+                onChange={handlePasswordChange}
+                disabled={isLoggingIn}
+                className={`w-full px-4 py-3.5 pr-12 rounded-2xl border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50 ${error ? 'border-red-500' : 'border-border'}`}
+              />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            {error && (
+              <p className="mt-2 text-sm text-red-500">{error}</p>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
@@ -47,11 +97,13 @@ export function LoginForm() {
             </label>
             <Link to="/forgot-password" className="text-sm text-[#047857] hover:underline font-medium">Lupa password?</Link>
           </div>
-          <button onClick={() => navigate('/')}
-            className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-4 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm">
-            Masuk
+          <button 
+            type="submit" 
+            disabled={isLoggingIn}
+            className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-4 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            {isLoggingIn ? 'Memuat...' : 'Masuk'}
           </button>
-        </div>
+        </form>
 
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-border"></div>
@@ -148,22 +200,37 @@ export function LoginForm() {
           <h2 className="text-2xl font-semibold text-foreground mt-4 mb-1 text-center">Selamat Datang</h2>
           <p className="text-sm text-muted-foreground mb-6 text-center">Masuk ke akun Anda</p>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
-              <input type="email" placeholder="nama@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+              <input 
+                type="email" 
+                placeholder="nama@email.com"
+                value={email}
+                onChange={handleEmailChange}
+                disabled={isLoggingIn}
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
               <div className="relative">
-                <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  disabled={isLoggingIn}
+                  className={`w-full px-4 py-3 pr-12 rounded-xl border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50 ${error ? 'border-red-500' : 'border-border'}`}
+                />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              {error && (
+                <p className="mt-2 text-sm text-red-500">{error}</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
@@ -174,11 +241,13 @@ export function LoginForm() {
               <Link to="/forgot-password" className="text-sm text-[#047857] hover:underline">Lupa password?</Link>
             </div>
 
-            <button onClick={() => navigate('/')}
-              className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all">
-              Masuk
+            <button 
+              type="submit" 
+              disabled={isLoggingIn}
+              className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              {isLoggingIn ? 'Memuat...' : 'Masuk'}
             </button>
-          </div>
+          </form>
 
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-border"></div>

@@ -1,11 +1,68 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { Link } from 'react-router';
 import { Shield, Eye, EyeOff, TrendingUp, PiggyBank, Heart } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { toast } from 'sonner';
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const { register, isRegistering } = useAuth();
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    setError(null);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setError(null);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setError(null);
+  };
+
+  const handleConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    setError(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    if (!email || !password || !name) {
+      setError('Semua field harus diisi');
+      return;
+    }
+
+    if (password.length < 8) {
+      setError('Password minimal 8 karakter');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Password dan konfirmasi password tidak sama');
+      return;
+    }
+
+    try {
+      const response = await register({ email, password, name });
+      if (!response.success) {
+        setError(response.message || 'Registrasi gagal. Silakan coba lagi.');
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      setError(err.message || 'Registrasi gagal. Silakan coba lagi.');
+    }
+  };
 
   const GoogleSVG = () => (
     <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -33,22 +90,40 @@ export function RegisterForm() {
         <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">Buat Akun</h2>
         <p className="text-sm text-muted-foreground mb-5 text-center">Mulai kelola keuangan syariah Anda</p>
 
-        <div className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Nama Lengkap</label>
-            <input type="text" placeholder="Ahmad Fauzi"
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+            <input 
+              type="text" 
+              placeholder="Ahmad Fauzi"
+              value={name}
+              onChange={handleNameChange}
+              disabled={isRegistering}
+              className="w-full px-4 py-3 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50" 
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
-            <input type="email" placeholder="nama@email.com"
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+            <input 
+              type="email" 
+              placeholder="nama@email.com"
+              value={email}
+              onChange={handleEmailChange}
+              disabled={isRegistering}
+              className="w-full px-4 py-3 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50" 
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
             <div className="relative">
-              <input type={showPassword ? 'text' : 'password'} placeholder="Min. 8 karakter"
-                className="w-full px-4 py-3 pr-12 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                placeholder="Min. 8 karakter"
+                value={password}
+                onChange={handlePasswordChange}
+                disabled={isRegistering}
+                className={`w-full px-4 py-3 pr-12 rounded-2xl border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50 ${error ? 'border-red-500' : 'border-border'}`}
+              />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -58,20 +133,30 @@ export function RegisterForm() {
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Konfirmasi Password</label>
             <div className="relative">
-              <input type={showConfirm ? 'text' : 'password'} placeholder="Ulangi password"
-                className="w-full px-4 py-3 pr-12 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm" />
+              <input 
+                type={showConfirm ? 'text' : 'password'} 
+                placeholder="Ulangi password"
+                value={confirmPassword}
+                onChange={handleConfirmChange}
+                disabled={isRegistering}
+                className={`w-full px-4 py-3 pr-12 rounded-2xl border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm disabled:opacity-50 ${error && !password ? 'border-red-500' : 'border-border'}`}
+              />
               <button type="button" onClick={() => setShowConfirm(!showConfirm)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
                 {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            {error && (
+              <p className="mt-2 text-sm text-red-500">{error}</p>
+            )}
           </div>
-
-          <button onClick={() => navigate('/verify-email')}
-            className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm">
-            Daftar
+          <button 
+            type="submit" 
+            disabled={isRegistering}
+            className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            {isRegistering ? 'Memuat...' : 'Daftar'}
           </button>
-        </div>
+        </form>
 
         <div className="flex items-center gap-3 my-4">
           <div className="flex-1 h-px bg-border"></div>
@@ -172,22 +257,40 @@ export function RegisterForm() {
           <h2 className="text-2xl font-semibold text-foreground mt-4 mb-1 text-center">Buat Akun</h2>
           <p className="text-sm text-muted-foreground mb-6 text-center">Mulai kelola keuangan syariah Anda</p>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Nama Lengkap</label>
-              <input type="text" placeholder="Ahmad Fauzi"
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+              <input 
+                type="text" 
+                placeholder="Ahmad Fauzi"
+                value={name}
+                onChange={handleNameChange}
+                disabled={isRegistering}
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
-              <input type="email" placeholder="nama@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+              <input 
+                type="email" 
+                placeholder="nama@email.com"
+                value={email}
+                onChange={handleEmailChange}
+                disabled={isRegistering}
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
               <div className="relative">
-                <input type={showPassword ? 'text' : 'password'} placeholder="Min. 8 karakter"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  placeholder="Min. 8 karakter"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  disabled={isRegistering}
+                  className={`w-full px-4 py-3 pr-12 rounded-xl border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50 ${error ? 'border-red-500' : 'border-border'}`}
+                />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -197,20 +300,31 @@ export function RegisterForm() {
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Konfirmasi Password</label>
               <div className="relative">
-                <input type={showConfirm ? 'text' : 'password'} placeholder="Ulangi password"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]" />
+                <input 
+                  type={showConfirm ? 'text' : 'password'} 
+                  placeholder="Ulangi password"
+                  value={confirmPassword}
+                  onChange={handleConfirmChange}
+                  disabled={isRegistering}
+                  className={`w-full px-4 py-3 pr-12 rounded-xl border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] disabled:opacity-50 ${error && !password ? 'border-red-500' : 'border-border'}`}
+                />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              {error && (
+                <p className="mt-2 text-sm text-red-500">{error}</p>
+              )}
             </div>
 
-            <button onClick={() => navigate('/verify-email')}
-              className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all">
-              Daftar
+            <button 
+              type="submit" 
+              disabled={isRegistering}
+              className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              {isRegistering ? 'Memuat...' : 'Daftar'}
             </button>
-          </div>
+          </form>
 
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-border"></div>
