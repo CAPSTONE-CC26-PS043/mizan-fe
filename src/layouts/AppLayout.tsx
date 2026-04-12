@@ -3,14 +3,31 @@ import { Outlet, NavLink, useNavigate } from 'react-router';
 import {
   LayoutDashboard, Heart, Wallet,
   TrendingUp, BookOpen, Sparkles, Shield, Settings,
-  LogOut, User, ChevronUp, Bell, Menu, X, AlertCircle
+  LogOut, User, ChevronUp, Bell, Menu, X
 } from 'lucide-react';
+import { useAuth } from '../features/auth/hooks/useAuth';
+import { useAuthStore } from '../features/auth/store/auth.store';
 
 export default function AppLayout() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const { logout } = useAuth();
+  const { user } = useAuthStore();
+
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return 'MF';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const getUserDisplayName = () => {
+    return user?.name || user?.email || 'User';
+  };
 
   // 5 item untuk bottom nav mobile (yang paling penting)
   const bottomNavItems = [
@@ -40,7 +57,7 @@ export default function AppLayout() {
 
   const handleLogoutConfirm = () => {
     setLogoutDialogOpen(false);
-    navigate('/login');
+    logout();
   };
 
   return (
@@ -106,10 +123,10 @@ export default function AppLayout() {
             className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d97706] to-[#f59e0b] flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-semibold text-sm">MF</span>
+              <span className="text-white font-semibold text-sm">{getInitials(user?.name)}</span>
             </div>
             <div className="flex-1 text-left">
-              <p className="font-medium text-foreground text-sm">User</p>
+              <p className="font-medium text-foreground text-sm">{getUserDisplayName()}</p>
               <p className="text-xs text-muted-foreground">Member</p>
             </div>
             <ChevronUp className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -178,10 +195,10 @@ export default function AppLayout() {
             <div className="px-4 py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#d97706] to-[#f59e0b] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-semibold text-sm">MF</span>
+                  <span className="text-white font-semibold text-sm">{getInitials(user?.name)}</span>
                 </div>
                 <div>
-                  <p className="font-medium text-foreground text-sm">User</p>
+                  <p className="font-medium text-foreground text-sm">{getUserDisplayName()}</p>
                   <p className="text-xs text-muted-foreground">Member</p>
                 </div>
               </div>

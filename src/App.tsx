@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router';
+import { useAuthStore } from './features/auth/store/auth.store';
 import AppLayout from './layouts/AppLayout';
 import AuthLayout from './layouts/AuthLayout';
 import DashboardPage from './pages/DashboardPage';
@@ -14,30 +15,57 @@ import { ForgotPasswordForm } from './features/auth/components/ForgotPasswordFor
 import { ResetPasswordForm } from './features/auth/components/ResetPasswordForm';
 import { VerifyEmailPage } from './features/auth/components/VerifyEmailConfirmPage';
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const router = createBrowserRouter([
-  { path: '/', element: <Navigate to="/" replace /> },
   {
     path: '/',
-    Component: AuthLayout,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
-      { path: 'login',    Component: LoginPage    },
-      { path: 'register', Component: RegisterPage },
-      { path: 'forgot-password', Component: ForgotPasswordForm },
-      { path: 'reset-password',  Component: ResetPasswordForm  },
-      { path: 'verify-email',    Component: VerifyEmailPage },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'forgot-password', element: <ForgotPasswordForm /> },
+      { path: 'reset-password', element: <ResetPasswordForm /> },
+      { path: 'verify-email', element: <VerifyEmailPage /> },
     ],
   },
   {
     path: '/',
-    Component: AppLayout,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
-      { index: true,               Component: DashboardPage    },
-      { path: 'transactions',      Component: TransactionsPage },
-      { path: 'wallets',           Component: WalletPage       },
-      { path: 'budget',            Component: BudgetPage       },
-      { path: 'zakat',             Component: ZakatPage        },
-      { path: 'insights',          Component: InsightsPage     },
-      { path: 'settings',          Component: SettingsPage     },
+      { index: true, element: <DashboardPage /> },
+      { path: 'transactions', element: <TransactionsPage /> },
+      { path: 'wallets', element: <WalletPage /> },
+      { path: 'budget', element: <BudgetPage /> },
+      { path: 'zakat', element: <ZakatPage /> },
+      { path: 'insights', element: <InsightsPage /> },
+      { path: 'settings', element: <SettingsPage /> },
     ],
   },
 ]);
