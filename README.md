@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# Mizan FE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based frontend application built with Vite and TypeScript.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS v4
+- **UI Components**: MUI, Radix UI, shadcn/ui
+- **State Management**: Zustand
+- **Data Fetching**: TanStack React Query
+- **Routing**: React Router v7
+- **Form Handling**: React Hook Form
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js (v18 or higher)
+- npm
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Build
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```
+src/
+├── components/    # Reusable UI components
+├── pages/         # Page components
+├── hooks/         # Custom React hooks
+├── stores/        # Zustand state stores
+├── services/      # API services and queries
+└── utils/         # Utility functions
+```
+
+## Configuration
+
+### Path Aliases
+
+The `@` alias is configured to point to the `src` directory:
+
+```typescript
+import { Component } from '@/components/Component'
+```
+
+### Assets
+
+SVG and CSV files can be imported directly as assets.
+
+## Key Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| @mui/material | Material UI components |
+| @radix-ui/* | Headless UI primitives |
+| zustand | State management |
+| @tanstack/react-query | Server state management |
+| react-router | Client-side routing |
+| react-hook-form | Form handling |
+| recharts | Chart components |
+| motion | Animations |
+| sonner | Toast notifications |
+| lucide-react | Icons |
+
+## ESLint
+
+The project uses ESLint with the following plugins:
+
+- `typescript-eslint` for TypeScript rules
+- `eslint-plugin-react-hooks` for React hooks rules
+- `eslint-plugin-react-refresh` for React Refresh rules
+
+Run linting:
+
+```bash
+npm run lint .
 ```
