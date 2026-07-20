@@ -11,9 +11,9 @@ export function ResetPasswordForm() {
   const navigate = useNavigate();
 
   const rules = [
-    { label: 'Minimal 8 karakter', pass: password.length >= 8 },
-    { label: 'Mengandung huruf besar', pass: /[A-Z]/.test(password) },
-    { label: 'Mengandung angka', pass: /[0-9]/.test(password) },
+    { label: 'Minimum 8 characters', pass: password.length >= 8 },
+    { label: 'Contains uppercase letter', pass: /[A-Z]/.test(password) },
+    { label: 'Contains a number', pass: /[0-9]/.test(password) },
   ];
   const allPass = rules.every((r) => r.pass) && password === confirm && confirm.length > 0;
 
@@ -36,18 +36,18 @@ export function ResetPasswordForm() {
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center mb-4 mx-auto">
               <Lock className="w-7 h-7 text-[#047857]" />
             </div>
-            <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">Buat Password Baru</h2>
-            <p className="text-sm text-muted-foreground mb-8 text-center">Password baru harus berbeda dari sebelumnya.</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">Create New Password</h2>
+            <p className="text-sm text-muted-foreground mb-8 text-center">Your new password must be different from the previous one.</p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Password Baru</label>
+                <label className="block text-sm font-medium text-foreground mb-2">New Password</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 8 karakter"
+                    placeholder="Min. 8 characters"
                     className="w-full px-4 py-3.5 pr-12 rounded-2xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857] text-sm"
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -71,13 +71,13 @@ export function ResetPasswordForm() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Konfirmasi Password</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Confirm Password</label>
                 <div className="relative">
                   <input
                     type={showConfirm ? 'text' : 'password'}
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
-                    placeholder="Ulangi password baru"
+                    placeholder="Repeat new password"
                     className={`w-full px-4 py-3.5 pr-12 rounded-2xl border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 text-sm transition-colors ${
                       confirm.length > 0 && confirm !== password
                         ? 'border-red-400 focus:ring-red-400'
@@ -90,7 +90,7 @@ export function ResetPasswordForm() {
                   </button>
                 </div>
                 {confirm.length > 0 && confirm !== password && (
-                  <p className="text-xs text-red-500 mt-1.5">Password tidak cocok</p>
+                  <p className="text-xs text-red-500 mt-1.5">Passwords do not match</p>
                 )}
               </div>
 
@@ -103,7 +103,7 @@ export function ResetPasswordForm() {
                     : 'bg-muted text-muted-foreground cursor-not-allowed'
                 }`}
               >
-                Simpan Password
+                Save Password
               </button>
             </div>
           </>
@@ -112,13 +112,13 @@ export function ResetPasswordForm() {
             <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-5">
               <CheckCircle className="w-8 h-8 text-[#047857]" />
             </div>
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Password Berhasil Diubah!</h2>
-            <p className="text-sm text-muted-foreground mb-8">Gunakan password baru Anda untuk masuk ke akun.</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Password Changed Successfully!</h2>
+            <p className="text-sm text-muted-foreground mb-8">Use your new password to log in to your account.</p>
             <button
               onClick={() => navigate('/login')}
               className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-4 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm"
             >
-              Masuk Sekarang
+              Log In Now
             </button>
           </div>
         )}
@@ -127,7 +127,7 @@ export function ResetPasswordForm() {
       {/* DESKTOP */}
       <div className="hidden md:flex w-full max-w-4xl bg-card rounded-3xl shadow-2xl border border-border overflow-hidden min-h-[560px]">
 
-        {/* Kiri */}
+        {/* Left */}
         <div className="w-1/2 bg-gradient-to-br from-[#065f46] via-[#047857] to-[#059669] p-10 flex flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24"></div>
@@ -146,13 +146,13 @@ export function ResetPasswordForm() {
             <div className="w-24 h-24 rounded-3xl bg-white/15 border border-white/20 flex items-center justify-center mb-6">
               <Lock className="w-12 h-12 text-white" />
             </div>
-            <h3 className="text-white text-xl font-semibold mb-3">Password Aman</h3>
+            <h3 className="text-white text-xl font-semibold mb-3">Secure Password</h3>
             <p className="text-white/70 text-sm leading-relaxed max-w-[220px] mb-6">
-              Buat password yang kuat untuk menjaga keamanan akun Anda.
+              Create a strong password to keep your account secure.
             </p>
 
             <div className="w-full space-y-2">
-              {['Minimal 8 karakter', 'Kombinasi huruf & angka', 'Tidak sama dengan sebelumnya'].map((tip) => (
+              {['Minimum 8 characters', 'Combination of letters & numbers', 'Different from previous password'].map((tip) => (
                 <div key={tip} className="flex items-center gap-2 bg-white/10 rounded-xl px-4 py-2.5 border border-white/10">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-300 flex-shrink-0"></div>
                   <span className="text-white/80 text-xs">{tip}</span>
@@ -163,30 +163,30 @@ export function ResetPasswordForm() {
 
           <div className="relative z-10">
             <p className="text-white/90 text-sm font-medium leading-relaxed">
-              "Keamanan akun Anda adalah prioritas kami."
+              "Your account security is our top priority."
             </p>
           </div>
         </div>
 
-        {/* Kanan */}
+        {/* Right */}
         <div className="w-1/2 p-8 flex flex-col justify-center">
           {!done ? (
             <>
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center mb-5">
                 <Lock className="w-6 h-6 text-[#047857]" />
               </div>
-              <h2 className="text-2xl font-semibold text-foreground mb-1">Buat Password Baru</h2>
-              <p className="text-sm text-muted-foreground mb-6">Password baru harus berbeda dari sebelumnya.</p>
+              <h2 className="text-2xl font-semibold text-foreground mb-1">Create New Password</h2>
+              <p className="text-sm text-muted-foreground mb-6">Your new password must be different from the previous one.</p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Password Baru</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">New Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Min. 8 karakter"
+                      placeholder="Min. 8 characters"
                       className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#047857]"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -210,13 +210,13 @@ export function ResetPasswordForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Konfirmasi Password</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Confirm Password</label>
                   <div className="relative">
                     <input
                       type={showConfirm ? 'text' : 'password'}
                       value={confirm}
                       onChange={(e) => setConfirm(e.target.value)}
-                      placeholder="Ulangi password baru"
+                      placeholder="Repeat new password"
                       className={`w-full px-4 py-3 pr-12 rounded-xl border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-colors ${
                         confirm.length > 0 && confirm !== password
                           ? 'border-red-400 focus:ring-red-400'
@@ -229,7 +229,7 @@ export function ResetPasswordForm() {
                     </button>
                   </div>
                   {confirm.length > 0 && confirm !== password && (
-                    <p className="text-xs text-red-500 mt-1.5">Password tidak cocok</p>
+                    <p className="text-xs text-red-500 mt-1.5">Passwords do not match</p>
                   )}
                 </div>
 
@@ -242,12 +242,12 @@ export function ResetPasswordForm() {
                       : 'bg-muted text-muted-foreground cursor-not-allowed'
                   }`}
                 >
-                  Simpan Password
+                  Save Password
                 </button>
               </div>
 
               <Link to="/login" className="text-center text-sm text-muted-foreground mt-6 hover:text-foreground transition-colors block">
-                Kembali ke Login
+                Back to Login
               </Link>
             </>
           ) : (
@@ -255,13 +255,13 @@ export function ResetPasswordForm() {
               <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-5">
                 <CheckCircle className="w-7 h-7 text-[#047857]" />
               </div>
-              <h2 className="text-2xl font-semibold text-foreground mb-2">Password Berhasil Diubah!</h2>
-              <p className="text-sm text-muted-foreground mb-6">Gunakan password baru Anda untuk masuk ke akun.</p>
+              <h2 className="text-2xl font-semibold text-foreground mb-2">Password Changed Successfully!</h2>
+              <p className="text-sm text-muted-foreground mb-6">Use your new password to log in to your account.</p>
               <button
                 onClick={() => navigate('/login')}
                 className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all"
               >
-                Masuk Sekarang
+                Log In Now
               </button>
             </div>
           )}

@@ -12,7 +12,7 @@ export function VerifyEmailPage() {
     setTimeout(() => setResent(false), 5000);
   };
 
-  // Email dari proses register, idealnya dari state/store
+  // Email from registration process, ideally from state/store
   const email = 'nama@email.com';
 
   return (
@@ -34,15 +34,15 @@ export function VerifyEmailPage() {
               </div>
             </div>
 
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Cek Email Kamu</h2>
-            <p className="text-sm text-muted-foreground mb-1">Kami kirimkan link verifikasi ke</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Check Your Email</h2>
+            <p className="text-sm text-muted-foreground mb-1">We sent a verification link to</p>
             <p className="text-sm font-semibold text-foreground mb-6">{email}</p>
 
             <div className="bg-muted/40 rounded-2xl p-4 mb-8 text-left space-y-3">
               {[
-                'Buka email dari Mizan Finance',
-                'Klik tombol "Verifikasi Email"',
-                'Kamu akan otomatis masuk ke aplikasi',
+                'Open the email from Mizan Finance',
+                'Click the "Verify Email" button',
+                'You will be automatically logged into the app',
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-[#047857]/10 text-[#047857] flex items-center justify-center flex-shrink-0 text-xs font-semibold mt-0.5">
@@ -56,7 +56,7 @@ export function VerifyEmailPage() {
             {resent && (
               <div className="flex items-center justify-center gap-2 text-xs text-[#047857] mb-4">
                 <CheckCircle className="w-4 h-4" />
-                Email verifikasi berhasil dikirim ulang
+                Verification email resent successfully
               </div>
             )}
 
@@ -66,21 +66,21 @@ export function VerifyEmailPage() {
               className="flex items-center justify-center gap-2 text-sm text-[#047857] font-medium mx-auto hover:underline disabled:opacity-50 mb-6"
             >
               <RefreshCw className={`w-4 h-4 ${resent ? 'animate-spin' : ''}`} />
-              {resent ? 'Email dikirim...' : 'Kirim ulang email'}
+              {resent ? 'Sending...' : 'Resend email'}
             </button>
 
-            {/* Tombol ini untuk demo/testing, di prod tidak perlu */}
+            {/* This button is for demo/testing only, not needed in production */}
             <button
               onClick={() => setVerified(true)}
               className="w-full border border-border py-3.5 rounded-2xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
             >
-              Saya sudah verifikasi
+              I have verified
             </button>
 
             <p className="text-xs text-muted-foreground mt-6">
-              Email salah?{' '}
+              Wrong email?{' '}
               <button onClick={() => navigate('/register')} className="text-[#047857] font-medium hover:underline">
-                Daftar ulang
+                Register again
               </button>
             </p>
           </div>
@@ -89,13 +89,13 @@ export function VerifyEmailPage() {
             <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-5">
               <CheckCircle className="w-10 h-10 text-[#047857]" />
             </div>
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Email Terverifikasi!</h2>
-            <p className="text-sm text-muted-foreground mb-8">Akun Anda aktif. Selamat menggunakan Mizan Finance.</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Email Verified!</h2>
+            <p className="text-sm text-muted-foreground mb-8">Your account is active. Welcome to Mizan Finance.</p>
             <button
               onClick={() => navigate('/app')}
               className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-4 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm"
             >
-              Mulai Sekarang
+              Get Started
             </button>
           </div>
         )}
@@ -104,7 +104,7 @@ export function VerifyEmailPage() {
       {/* DESKTOP */}
       <div className="hidden md:flex w-full max-w-4xl bg-card rounded-3xl shadow-2xl border border-border overflow-hidden min-h-[520px]">
 
-        {/* Kiri */}
+        {/* Left */}
         <div className="w-1/2 bg-gradient-to-br from-[#065f46] via-[#047857] to-[#059669] p-10 flex flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24"></div>
@@ -120,7 +120,7 @@ export function VerifyEmailPage() {
           </div>
 
           <div className="relative z-10 flex flex-col items-center text-center py-6">
-            {/* Animasi envelope */}
+            {/* Envelope animation */}
             <div className="relative mb-6">
               <div className="w-28 h-28 rounded-3xl bg-white/15 border border-white/20 flex items-center justify-center">
                 <Mail className="w-14 h-14 text-white" />
@@ -130,16 +130,16 @@ export function VerifyEmailPage() {
               </div>
             </div>
 
-            <h3 className="text-white text-xl font-semibold mb-2">Hampir Selesai!</h3>
+            <h3 className="text-white text-xl font-semibold mb-2">Almost Done!</h3>
             <p className="text-white/70 text-sm leading-relaxed max-w-[220px] mb-6">
-              Satu langkah lagi untuk mengaktifkan akun Mizan Finance Anda.
+              One more step to activate your Mizan Finance account.
             </p>
 
             <div className="w-full space-y-2">
               {[
-                { num: '1', text: 'Buka email dari Mizan Finance' },
-                { num: '2', text: 'Klik "Verifikasi Email"' },
-                { num: '3', text: 'Akun Anda langsung aktif' },
+                { num: '1', text: 'Open the email from Mizan Finance' },
+                { num: '2', text: 'Click "Verify Email"' },
+                { num: '3', text: 'Your account will be activated instantly' },
               ].map((s) => (
                 <div key={s.num} className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-2.5 border border-white/10">
                   <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
@@ -153,12 +153,12 @@ export function VerifyEmailPage() {
 
           <div className="relative z-10">
             <p className="text-white/90 text-sm font-medium leading-relaxed">
-              "Verifikasi email menjaga keamanan akun Anda dari akses tidak sah."
+              "Email verification keeps your account secure from unauthorized access."
             </p>
           </div>
         </div>
 
-        {/* Kanan */}
+        {/* Right */}
         <div className="w-1/2 p-8 flex flex-col justify-center">
           {!verified ? (
             <>
@@ -168,16 +168,16 @@ export function VerifyEmailPage() {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-semibold text-foreground mb-1">Cek Email Kamu</h2>
-              <p className="text-sm text-muted-foreground mb-1">Kami kirimkan link verifikasi ke</p>
+              <h2 className="text-2xl font-semibold text-foreground mb-1">Check Your Email</h2>
+              <p className="text-sm text-muted-foreground mb-1">We sent a verification link to</p>
               <p className="text-sm font-semibold text-foreground mb-6">{email}</p>
 
               <div className="bg-muted/40 rounded-xl p-4 mb-6 space-y-3">
-                <p className="text-xs font-medium text-foreground mb-2">Cara verifikasi:</p>
+                <p className="text-xs font-medium text-foreground mb-2">How to verify:</p>
                 {[
-                  'Buka email dari Mizan Finance',
-                  'Klik tombol "Verifikasi Email"',
-                  'Kamu otomatis masuk ke aplikasi',
+                  'Open the email from Mizan Finance',
+                  'Click the "Verify Email" button',
+                  'You will be automatically logged into the app',
                 ].map((step, i) => (
                   <div key={i} className="flex items-start gap-2.5">
                     <div className="w-4 h-4 rounded-full bg-[#047857]/15 text-[#047857] flex items-center justify-center flex-shrink-0 text-[10px] font-semibold mt-0.5">
@@ -191,7 +191,7 @@ export function VerifyEmailPage() {
               {resent && (
                 <div className="flex items-center gap-2 text-xs text-[#047857] mb-3">
                   <CheckCircle className="w-4 h-4" />
-                  Email verifikasi berhasil dikirim ulang
+                  Verification email resent successfully
                 </div>
               )}
 
@@ -201,7 +201,7 @@ export function VerifyEmailPage() {
                 className="flex items-center gap-2 text-sm text-[#047857] font-medium hover:underline disabled:opacity-50 mb-4"
               >
                 <RefreshCw className={`w-4 h-4 ${resent ? 'animate-spin' : ''}`} />
-                {resent ? 'Email dikirim...' : 'Kirim ulang email'}
+                {resent ? 'Sending...' : 'Resend email'}
               </button>
 
               <div className="h-px bg-border mb-4"></div>
@@ -210,13 +210,13 @@ export function VerifyEmailPage() {
                 onClick={() => setVerified(true)}
                 className="w-full border border-border py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
               >
-                Saya sudah verifikasi
+                I have verified
               </button>
 
               <p className="text-xs text-muted-foreground mt-4">
-                Email salah?{' '}
+                Wrong email?{' '}
                 <button onClick={() => navigate('/register')} className="text-[#047857] font-medium hover:underline">
-                  Daftar ulang
+                  Register again
                 </button>
               </p>
             </>
@@ -225,13 +225,13 @@ export function VerifyEmailPage() {
               <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-5">
                 <CheckCircle className="w-7 h-7 text-[#047857]" />
               </div>
-              <h2 className="text-2xl font-semibold text-foreground mb-2">Email Terverifikasi!</h2>
-              <p className="text-sm text-muted-foreground mb-6">Akun Anda aktif. Selamat menggunakan Mizan Finance.</p>
+              <h2 className="text-2xl font-semibold text-foreground mb-2">Email Verified!</h2>
+              <p className="text-sm text-muted-foreground mb-6">Your account is active. Welcome to Mizan Finance.</p>
               <button
                 onClick={() => navigate('/app')}
                 className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all"
               >
-                Mulai Sekarang
+                Get Started
               </button>
             </div>
           )}

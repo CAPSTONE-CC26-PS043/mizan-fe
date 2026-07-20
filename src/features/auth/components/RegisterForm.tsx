@@ -39,28 +39,28 @@ export function RegisterForm() {
     setError(null);
     
     if (!email || !password || !name) {
-      setError('Semua field harus diisi');
+      setError('All fields are required');
       return;
     }
 
     if (password.length < 8) {
-      setError('Password minimal 8 karakter');
+      setError('Password must be at least 8 characters');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Password dan konfirmasi password tidak sama');
+      setError('Passwords do not match');
       return;
     }
 
     try {
       const response = await register({ email, password, name });
       if (!response.success) {
-        setError(response.message || 'Registrasi gagal. Silakan coba lagi.');
+        setError(response.message || 'Registration failed. Please try again.');
       }
     } catch (error: unknown) {
       const err = error as Error;
-      setError(err.message || 'Registrasi gagal. Silakan coba lagi.');
+      setError(err.message || 'Registration failed. Please try again.');
     }
   };
 
@@ -87,12 +87,12 @@ export function RegisterForm() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">Buat Akun</h2>
-        <p className="text-sm text-muted-foreground mb-5 text-center">Mulai kelola keuangan syariah Anda</p>
+        <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">Create Account</h2>
+        <p className="text-sm text-muted-foreground mb-5 text-center">Start managing your shariah finances</p>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Nama Lengkap</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
             <input 
               type="text" 
               placeholder="Ahmad Fauzi"
@@ -118,7 +118,7 @@ export function RegisterForm() {
             <div className="relative">
               <input 
                 type={showPassword ? 'text' : 'password'} 
-                placeholder="Min. 8 karakter"
+                placeholder="Min. 8 characters"
                 value={password}
                 onChange={handlePasswordChange}
                 disabled={isRegistering}
@@ -131,11 +131,11 @@ export function RegisterForm() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Konfirmasi Password</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Confirm Password</label>
             <div className="relative">
               <input 
                 type={showConfirm ? 'text' : 'password'} 
-                placeholder="Ulangi password"
+                placeholder="Repeat password"
                 value={confirmPassword}
                 onChange={handleConfirmChange}
                 disabled={isRegistering}
@@ -154,13 +154,13 @@ export function RegisterForm() {
             type="submit" 
             disabled={isRegistering}
             className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-2xl font-semibold hover:shadow-lg transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-            {isRegistering ? 'Memuat...' : 'Daftar'}
+              {isRegistering ? 'Loading...' : 'Sign Up'}
           </button>
         </form>
 
         <div className="flex items-center gap-3 my-4">
           <div className="flex-1 h-px bg-border"></div>
-          <span className="text-xs text-muted-foreground">atau lanjutkan dengan</span>
+          <span className="text-xs text-muted-foreground">or continue with</span>
           <div className="flex-1 h-px bg-border"></div>
         </div>
 
@@ -171,15 +171,15 @@ export function RegisterForm() {
         </button>
 
         <p className="text-center text-sm text-muted-foreground mt-5">
-          Sudah punya akun?{' '}
-          <Link to="/login" className="text-[#047857] font-semibold hover:underline">Masuk di sini</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="text-[#047857] font-semibold hover:underline">Log in here</Link>
         </p>
       </div>
 
       {/* ── DESKTOP ──────────────────────────────── */}
       <div className="hidden md:flex w-full max-w-4xl bg-card rounded-3xl shadow-2xl border border-border overflow-hidden min-h-[600px]">
 
-        {/* Kolom kiri — ilustrasi */}
+        {/* Left column — illustration */}
         <div className="w-1/2 bg-gradient-to-br from-[#065f46] via-[#047857] to-[#059669] p-10 flex flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24"></div>
@@ -202,7 +202,7 @@ export function RegisterForm() {
                     <TrendingUp className="w-4 h-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-white/70 text-xs">Pemasukan Bulan Ini</p>
+                    <p className="text-white/70 text-xs">Income This Month</p>
                     <p className="text-white font-semibold text-sm">Rp 5.200.000</p>
                   </div>
                 </div>
@@ -215,11 +215,11 @@ export function RegisterForm() {
                     <Heart className="w-4 h-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-white/70 text-xs">Zakat Dibayar</p>
+                    <p className="text-white/70 text-xs">Zakat Paid</p>
                     <p className="text-white font-semibold text-sm">Rp 130.000</p>
                   </div>
                 </div>
-                <span className="text-xs bg-emerald-400/30 text-white px-2 py-0.5 rounded-full">✓ Lunas</span>
+                <span className="text-xs bg-emerald-400/30 text-white px-2 py-0.5 rounded-full">✓ Paid</span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20 flex items-center justify-between">
@@ -228,8 +228,8 @@ export function RegisterForm() {
                     <PiggyBank className="w-4 h-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-white/70 text-xs">Target Tabungan</p>
-                    <p className="text-white font-semibold text-sm">75% tercapai</p>
+                    <p className="text-white/70 text-xs">Savings Target</p>
+                    <p className="text-white font-semibold text-sm">75% reached</p>
                   </div>
                 </div>
                 <div className="w-16 bg-white/20 rounded-full h-1.5">
@@ -239,27 +239,27 @@ export function RegisterForm() {
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center">
-              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Bebas Riba</div>
-              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Transparan</div>
-              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Berkah</div>
+              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Interest-Free</div>
+              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Transparent</div>
+              <div className="flex items-center gap-1.5 bg-white/15 text-white text-xs px-3 py-1.5 rounded-full border border-white/20">✦ Blessed</div>
             </div>
           </div>
 
           <div className="relative z-10">
             <p className="text-white/90 text-sm font-medium leading-relaxed">
-              "Bergabung dengan ribuan Muslim yang sudah mengelola keuangan secara syariah bersama Mizan Finance."
+              "Join thousands of Muslims already managing their finances the shariah way with Mizan Finance."
             </p>
           </div>
         </div>
 
-        {/* Kolom kanan — form */}
+        {/* Right column — form */}
         <div className="w-1/2 p-8 flex flex-col justify-center overflow-y-auto">
-          <h2 className="text-2xl font-semibold text-foreground mt-4 mb-1 text-center">Buat Akun</h2>
-          <p className="text-sm text-muted-foreground mb-6 text-center">Mulai kelola keuangan syariah Anda</p>
+          <h2 className="text-2xl font-semibold text-foreground mt-4 mb-1 text-center">Create Account</h2>
+          <p className="text-sm text-muted-foreground mb-6 text-center">Start managing your shariah finances</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Nama Lengkap</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
               <input 
                 type="text" 
                 placeholder="Ahmad Fauzi"
@@ -285,7 +285,7 @@ export function RegisterForm() {
               <div className="relative">
                 <input 
                   type={showPassword ? 'text' : 'password'} 
-                  placeholder="Min. 8 karakter"
+                  placeholder="Min. 8 characters"
                   value={password}
                   onChange={handlePasswordChange}
                   disabled={isRegistering}
@@ -298,11 +298,11 @@ export function RegisterForm() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Konfirmasi Password</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Confirm Password</label>
               <div className="relative">
                 <input 
                   type={showConfirm ? 'text' : 'password'} 
-                  placeholder="Ulangi password"
+                  placeholder="Repeat password"
                   value={confirmPassword}
                   onChange={handleConfirmChange}
                   disabled={isRegistering}
@@ -322,25 +322,25 @@ export function RegisterForm() {
               type="submit" 
               disabled={isRegistering}
               className="w-full bg-gradient-to-r from-[#065f46] to-[#047857] text-white py-3.5 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              {isRegistering ? 'Memuat...' : 'Daftar'}
+            {isRegistering ? 'Loading...' : 'Sign Up'}
             </button>
           </form>
 
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-border"></div>
-            <span className="text-xs text-muted-foreground">atau</span>
+            <span className="text-xs text-muted-foreground">or</span>
             <div className="flex-1 h-px bg-border"></div>
           </div>
 
           <button onClick={() => alert('Google OAuth')}
             className="w-full flex items-center justify-center gap-3 border border-border bg-background hover:bg-muted py-3 rounded-xl transition-all">
             <GoogleSVG />
-            <span className="text-sm font-medium text-foreground">Daftar dengan Google</span>
+            <span className="text-sm font-medium text-foreground">Sign up with Google</span>
           </button>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            Sudah punya akun?{' '}
-            <Link to="/login" className="text-[#047857] font-medium hover:underline">Masuk di sini</Link>
+            Already have an account?{' '}
+            <Link to="/login" className="text-[#047857] font-medium hover:underline">Log in here</Link>
           </p>
         </div>
       </div>

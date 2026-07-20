@@ -35,7 +35,7 @@ export default function AppLayout() {
     { to: '/transactions', icon: TrendingUp,      label: 'Transaction'  },
     { to: '/wallets',      icon: Wallet,          label: 'Wallet'     },
     { to: '/budgets',      icon: Wallet,          label: 'Budget'     },
-    { to: '/zakat',        icon: Heart,           label: 'Zakat'      },
+    // { to: '/zakat',        icon: Heart,           label: 'Zakat'      },
   ];
 
   // Sidebar navigation items
@@ -44,7 +44,7 @@ export default function AppLayout() {
     { to: '/transactions', icon: TrendingUp,      label: 'Transaction Tracking' },
     { to: '/wallets',      icon: Wallet,          label: 'Wallet'     },
     { to: '/budgets',      icon: Wallet,          label: 'Budget Planning'  },
-    { to: '/zakat',        icon: Heart,           label: 'Zakat & Charity'  },
+    // { to: '/zakat',        icon: Heart,           label: 'Zakat & Charity'  },
   ];
 
   const handleLogoutClick = () => {

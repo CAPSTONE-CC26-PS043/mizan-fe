@@ -43,7 +43,7 @@ function CategoryIcon({ category, className }: CategoryIconProps) {
     'House': Home,
     'Health': Heart,
     'Education': TrendingUp,
-    'Zakat': Heart,
+    // 'Zakat': Heart,
     'Savings': PiggyBank,
     'Other': DollarSign
   };
